@@ -23,3 +23,9 @@ fn equal_test() {
 
     assert_ne!(dollar_5, franc_5);
 }
+
+#[test]
+fn currency_test() {
+    assert_eq!("USD", Money::new("dollar", 1).currency());
+    assert_eq!("CHF", Money::new("franc", 1).currency());
+}

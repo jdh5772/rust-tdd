@@ -9,6 +9,7 @@ enum Currency {
 pub struct Money {
     currency: Currency,
     amount: usize,
+    iso_code: &'static str,
 }
 
 impl Money {
@@ -17,14 +18,17 @@ impl Money {
             "dollar" => Self {
                 currency: Currency::Dollar,
                 amount,
+                iso_code: "USD",
             },
             "franc" => Self {
                 currency: Currency::Franc,
                 amount,
+                iso_code: "CHF",
             },
             _ => Self {
                 currency: Currency::None,
                 amount: 0,
+                iso_code: "",
             },
         }
     }
@@ -33,10 +37,15 @@ impl Money {
         Self {
             currency: self.currency,
             amount: self.amount * n,
+            iso_code: self.iso_code,
         }
     }
 
     pub fn equals(&self, other: Self) -> bool {
         self.currency == other.currency && self.amount == other.amount
+    }
+
+    pub fn currency(&self) -> &str {
+        self.iso_code
     }
 }
