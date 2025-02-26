@@ -1,38 +1,42 @@
-pub trait Money: Sized {
-    fn new(amount: usize) -> Self;
-    fn amount(&self) -> usize;
-    fn multiple(&self, n: usize) -> Self {
-        Self::new(self.amount() * n)
-    }
-    fn equals(&self, other: Self) -> bool {
-        self.amount() == other.amount()
-    }
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Currency {
+    Dollar,
+    Franc,
+    None,
 }
 
 #[derive(PartialEq, Eq, Debug)]
-pub struct Dollar {
+pub struct Money {
+    currency: Currency,
     amount: usize,
 }
 
-impl Money for Dollar {
-    fn new(amount: usize) -> Self {
-        Self { amount }
+impl Money {
+    pub fn new(currency: &str, amount: usize) -> Self {
+        match currency {
+            "dollar" => Self {
+                currency: Currency::Dollar,
+                amount,
+            },
+            "franc" => Self {
+                currency: Currency::Franc,
+                amount,
+            },
+            _ => Self {
+                currency: Currency::None,
+                amount: 0,
+            },
+        }
     }
-    fn amount(&self) -> usize {
-        self.amount
-    }
-}
 
-#[derive(PartialEq, Eq, Debug)]
-pub struct Franc {
-    amount: usize,
-}
-
-impl Money for Franc {
-    fn new(amount: usize) -> Self {
-        Self { amount }
+    pub fn times(&self, n: usize) -> Self {
+        Self {
+            currency: self.currency,
+            amount: self.amount * n,
+        }
     }
-    fn amount(&self) -> usize {
-        self.amount
+
+    pub fn equals(&self, other: Self) -> bool {
+        self.currency == other.currency && self.amount == other.amount
     }
 }
