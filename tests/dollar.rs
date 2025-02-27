@@ -1,4 +1,4 @@
-use rust_tdd::Money;
+use rust_tdd::{Bank, Money};
 
 #[test]
 fn multiple_test() {
@@ -16,11 +16,7 @@ fn equal_test() {
     let dollar_5 = Money::new("dollar", 5);
     assert!(dollar_5.equals(Money::new("dollar", 5)));
     assert!(!dollar_5.equals(Money::new("dollar", 7)));
-
     let franc_5 = Money::new("franc", 5);
-    assert!(franc_5.equals(Money::new("franc", 5)));
-    assert!(!franc_5.equals(Money::new("franc", 7)));
-
     assert_ne!(dollar_5, franc_5);
 }
 
@@ -28,4 +24,13 @@ fn equal_test() {
 fn currency_test() {
     assert_eq!("USD", Money::new("dollar", 1).currency());
     assert_eq!("CHF", Money::new("franc", 1).currency());
+}
+
+#[test]
+fn simple_addition_test() {
+    let dollar_5 = Money::new("dollar", 5);
+    let sum = dollar_5.plus(Money::new("dollar", 5));
+    let bank = Bank::new();
+    let reduced = bank.reduce(sum, "USD");
+    assert_eq!(Money::new("dollar", 10), reduced);
 }

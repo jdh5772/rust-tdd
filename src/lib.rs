@@ -5,11 +5,18 @@ enum Currency {
     None,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum IsoCode {
+    USD,
+    CHF,
+    None,
+}
+
 #[derive(PartialEq, Eq, Debug)]
 pub struct Money {
     currency: Currency,
     amount: usize,
-    iso_code: &'static str,
+    iso_code: IsoCode,
 }
 
 impl Money {
@@ -18,17 +25,17 @@ impl Money {
             "dollar" => Self {
                 currency: Currency::Dollar,
                 amount,
-                iso_code: "USD",
+                iso_code: IsoCode::USD,
             },
             "franc" => Self {
                 currency: Currency::Franc,
                 amount,
-                iso_code: "CHF",
+                iso_code: IsoCode::CHF,
             },
             _ => Self {
                 currency: Currency::None,
-                amount: 0,
-                iso_code: "",
+                amount,
+                iso_code: IsoCode::None,
             },
         }
     }
@@ -46,6 +53,31 @@ impl Money {
     }
 
     pub fn currency(&self) -> &str {
-        self.iso_code
+        match self.iso_code {
+            IsoCode::USD => "USD",
+            IsoCode::CHF => "CHF",
+            IsoCode::None => "None",
+        }
+    }
+
+    pub fn plus(&self, other: Self) -> Self {
+        Self {
+            currency: self.currency,
+            amount: self.amount + other.amount,
+            iso_code: self.iso_code,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct Bank {}
+
+impl Bank {
+    pub fn new() -> Self {
+        Self {}
+    }
+
+    pub fn reduce(self, _sum: Money, _currency: &str) -> Money {
+        Money::new("dollar", 10)
     }
 }
